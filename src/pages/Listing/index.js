@@ -5,15 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { Modal, OutlinedButton, PrimaryButton, SecondaryButton } from "../../components/Shared";
 import { getUser } from "../../utils/utils";
 import images from '../../assets/images/images'
+import { useSelector } from "react-redux";
 
 
 const Listing = () => {
-
+    const result = useSelector((state) => state.userReducer);
     const navigate = useNavigate();
     const loginUsers = JSON.parse(localStorage.getItem("loginUser"));
     const loggedInUser = loginUsers.find(user => user.isLogin)
+
     //set the array of users
-    const [userData, setUserData] = useState(getUser());
+    const [userData, setUserData] = useState();
     const [rows, setRows] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [deleteIndex, setdeleteIndex] = useState();
@@ -67,6 +69,9 @@ const Listing = () => {
         })
     }, [userData])
 
+    useEffect(() => {
+        setUserData(result);
+    }, [result])
 
     return (
         <Layout>
