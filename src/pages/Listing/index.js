@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import Layout from "../../utils/Layout";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Modal, OutlinedButton, PrimaryButton, SecondaryButton } from "../../components/Shared";
-import images from '../../assets/images/images'
+import { Modal, OutlinedButton, PrimaryButton } from "../../components/Shared";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../../redux/User/actions";
+import images from '../../assets/images/images'
+import Layout from "../../utils/Layout";
 
 
 const Listing = () => {
@@ -20,6 +19,7 @@ const Listing = () => {
     const [rows, setRows] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [deleteIndex, setdeleteIndex] = useState();
+
     // delete the user on delete button's click
     const removeUser = () => {
         dispatch(deleteUser(deleteIndex))
@@ -33,14 +33,7 @@ const Listing = () => {
     }
 
 
-
-    //handel adding of new user
-    const handelAddUser = () => {
-        navigate("/add-new-student")
-    }
-
     //handel modal for delete user
-
     const handelDeleteModal = (id) => {
         setdeleteIndex(id);
         setShowModal(true);

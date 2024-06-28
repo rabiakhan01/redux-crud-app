@@ -3,7 +3,7 @@ import { Button, InputField, OutlinedButton } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser } from '../../redux/User/actions';
+import { addUser, updateUser } from '../../redux/User/actions';
 
 
 const AddUser = () => {
@@ -46,6 +46,16 @@ const AddUser = () => {
         setUserData(result)
     }, [result])
 
+    useEffect(() => {
+        if (id) {
+            setButtonChanged(true);
+            const findUser = result.find((user) => user.id == +id);
+            console.log("🚀 ~ useEffect ~ findUser:", findUser)
+            if (findUser) {
+                setFormData(findUser);
+            }
+        }
+    }, [id])
     //handel the user input
     const handelChange = (event) => {
 
@@ -85,6 +95,22 @@ const AddUser = () => {
 
     }
 
+    const editUser = () => {
+        navigate("/student-listing");
+        const findUser = result.find((user) => user.id === +id);
+        if (findUser) {
+            dispatch(updateUser({
+                id: findUser.id,
+                parentId: formData.parentId,
+                username: formData.username,
+                email: formData.email,
+                age: formData.age,
+                address: formData.address,
+                gender: formData.gender,
+                languages: formData.languages,
+            }));
+        }
+    }
     //handel the submitted data of the form
     const handelSubmit = (event) => {
         event.preventDefault();
@@ -122,27 +148,7 @@ const AddUser = () => {
         }
     }
 
-    //handel how to update data when user's information changes
-    const updateUser = () => {
 
-    }
-
-    //handel the logout functionality when user want to logout from button click
-    // const handelLogOut = () => {
-    //     const getUser = JSON.parse(localStorage.getItem("loginUser"));
-    //     getUser.map((user) => {
-    //         if (user.isLogin) {
-    //             user.isLogin = false;
-    //             const updateUser = JSON.stringify(getUser);
-    //             localStorage.setItem("loginUser", updateUser);
-    //             navigate("/")
-    //         }
-    //     })
-    // }
-    // listing button functionality
-    // const UserListing = () => {
-    //     navigate("/student-listing")
-    // }
 
     return (
         <Layout>
@@ -285,7 +291,7 @@ const AddUser = () => {
                                 buttonChanged ?
                                     <Button
                                         name="Update Student"
-                                        onClick={updateUser}
+                                        onClick={editUser}
                                         smWidth="28"
                                         mdWidth="sm:w-36"
                                     />
