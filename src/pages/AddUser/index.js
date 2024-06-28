@@ -2,27 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { Button, InputField, OutlinedButton } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Shared/Navbar';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '../../redux/User/actions';
+
 
 const AddUser = () => {
-
+    const dispatch = useDispatch();
+    const result = useSelector((state) => state.addUser);
+    console.log("🚀 ~ AddUser ~ result:", result)
     const { id } = useParams();
     const navigate = useNavigate();
 
     // get data from local storage for checking if user exists or not
     const getUser = () => {
-        const user = localStorage.getItem("users");
-        if (user) {
-            return JSON.parse(user);
-        }
-        else {
-            return [];
-        }
+
     }
 
 
     //set the array of users 
-    const [userData, setUserData] = useState(getUser())
+    const [userData, setUserData] = useState()
 
     //set the error when input fields are empty
     const [error, setError] = useState({
@@ -45,19 +43,21 @@ const AddUser = () => {
     })
 
     //button change from add user to update user
+
     const [buttonChanged, setButtonChanged] = useState(false);
 
     //handel the edit user functionality
     useEffect(() => {
-        const getUser = JSON.parse(localStorage.getItem("users"));
-        if (getUser) {
-            getUser.map((user) => {
-                if (user.id == id) {
-                    setFormData({ ...user })
-                    setButtonChanged(true);
-                }
-            })
-        }
+        //console.log("🚀 ~ AddUser ~ formData:", formData)
+        // const getUser = JSON.parse(localStorage.getItem("users"));
+        // if (getUser) {
+        //     getUser.map((user) => {
+        //         if (user.id == id) {
+        //             setFormData({ ...user })
+        //             setButtonChanged(true);
+        //         }
+        //     })
+        // }
     }, [])
 
     //handel the user input
@@ -102,6 +102,10 @@ const AddUser = () => {
     //handel the submitted data of the form
     const handelSubmit = (event) => {
 
+
+
+
+        console.log(formData)
         event.preventDefault();
 
         if (formData.username === '') {
@@ -117,68 +121,41 @@ const AddUser = () => {
             setError((prevError) => ({ ...prevError, address: "address required" }))
         }
         if (formData.username !== '' && formData.email !== '' && formData.age !== '' && formData.address !== '') {
+            dispatch(addUser(formData))
+            // navigate("/student-listing");
 
-            const updateData = [...userData, formData];
-            setUserData(updateData);
-            const setUser = JSON.stringify(updateData);
-            localStorage.setItem("users", setUser);
-            navigate("/student-listing");
-
+            setFormData({
+                username: "",
+                email: "",
+                age: "",
+                address: "",
+                gender: "female",
+                languages: []
+            })
         }
-        setFormData({
-            username: "",
-            email: "",
-            age: "",
-            address: "",
-            gender: "female",
-            languages: []
-        })
     }
 
     //handel how to update data when user's information changes
     const updateUser = () => {
-        let newData;
-        setUserData(prevState => {
-            newData = prevState.map(user => {
-                if (user.id == id) {
-                    return { ...formData };
-                }
-                return user;
-            });
 
-            const updateUser = JSON.stringify(newData);
-            localStorage.setItem("users", updateUser);
-            navigate("/student-listing")
-            return newData;
-
-        })
-        setButtonChanged(false);
-        setFormData({
-            username: "",
-            email: "",
-            age: "",
-            address: "",
-            gender: "female",
-            languages: []
-        });
     }
 
     //hnadel the logout functionality when user want to logout from button click
-    const handelLogOut = () => {
-        const getUser = JSON.parse(localStorage.getItem("loginUser"));
-        getUser.map((user) => {
-            if (user.isLogin) {
-                user.isLogin = false;
-                const updateUser = JSON.stringify(getUser);
-                localStorage.setItem("loginUser", updateUser);
-                navigate("/")
-            }
-        })
-    }
+    // const handelLogOut = () => {
+    //     const getUser = JSON.parse(localStorage.getItem("loginUser"));
+    //     getUser.map((user) => {
+    //         if (user.isLogin) {
+    //             user.isLogin = false;
+    //             const updateUser = JSON.stringify(getUser);
+    //             localStorage.setItem("loginUser", updateUser);
+    //             navigate("/")
+    //         }
+    //     })
+    // }
     // listing button functionality
-    const UserListing = () => {
-        navigate("/student-listing")
-    }
+    // const UserListing = () => {
+    //     navigate("/student-listing")
+    // }
 
     return (
         <Layout>
