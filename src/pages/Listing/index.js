@@ -3,30 +3,27 @@ import { useState } from "react";
 import Layout from "../../utils/Layout";
 import { useNavigate } from "react-router-dom";
 import { Modal, OutlinedButton, PrimaryButton, SecondaryButton } from "../../components/Shared";
-import { getUser } from "../../utils/utils";
 import images from '../../assets/images/images'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUser } from "../../redux/User/actions";
 
 
 const Listing = () => {
+    const dispatch = useDispatch();
     const result = useSelector((state) => state.userReducer);
     const navigate = useNavigate();
     const loginUsers = JSON.parse(localStorage.getItem("loginUser"));
     const loggedInUser = loginUsers.find(user => user.isLogin)
 
-    //set the array of users
+    //set the array of stored in the redux's store
     const [userData, setUserData] = useState();
     const [rows, setRows] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [deleteIndex, setdeleteIndex] = useState();
     // delete the user on delete button's click
-    const deleteUser = () => {
-        userData.splice(deleteIndex, 1);
-        const updateData = userData;
-        const setUser = JSON.stringify(updateData);
-        localStorage.setItem("users", setUser);
-
-        setUserData([...updateData]);
+    const removeUser = () => {
+        dispatch(deleteUser(deleteIndex))
+        setUserData([...result]);
         setShowModal(false);
 
     }
@@ -44,8 +41,8 @@ const Listing = () => {
 
     //handel modal for delete user
 
-    const handelDeleteModal = (index) => {
-        setdeleteIndex(index);
+    const handelDeleteModal = (id) => {
+        setdeleteIndex(id);
         setShowModal(true);
     }
 
@@ -110,7 +107,7 @@ const Listing = () => {
                                                 />
                                                 <PrimaryButton
                                                     btn_name="Delete"
-                                                    onClick={() => { handelDeleteModal(index) }}
+                                                    onClick={() => { handelDeleteModal(user.id) }}
                                                     mdWidth="sm:w-20"
                                                     smWidth="16"
                                                 />
@@ -149,7 +146,7 @@ const Listing = () => {
                             />
                             <PrimaryButton
                                 btn_name="DELETE"
-                                onClick={() => { deleteUser() }}
+                                onClick={() => { removeUser() }}
                                 smWidth="24"
                             />
                         </div>
