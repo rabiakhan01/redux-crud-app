@@ -8,19 +8,13 @@ import { addUser } from '../../redux/User/actions';
 
 const AddUser = () => {
     const dispatch = useDispatch();
-    const result = useSelector((state) => state.addUser);
-    console.log("🚀 ~ AddUser ~ result:", result)
+    const result = useSelector((state) => state.userReducer);
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // get data from local storage for checking if user exists or not
-    const getUser = () => {
-
-    }
-
-
     //set the array of users 
-    const [userData, setUserData] = useState()
+    const [userData, setUserData] = useState(result)
+    console.log("🚀 ~ AddUser ~ userData:", userData)
 
     //set the error when input fields are empty
     const [error, setError] = useState({
@@ -41,24 +35,16 @@ const AddUser = () => {
         gender: 'male',
         languages: [],
     })
+    const [userExists, setUserExists] = useState(false);
 
     //button change from add user to update user
 
     const [buttonChanged, setButtonChanged] = useState(false);
 
-    //handel the edit user functionality
+    //update the userData when anything in the state changes
     useEffect(() => {
-        //console.log("🚀 ~ AddUser ~ formData:", formData)
-        // const getUser = JSON.parse(localStorage.getItem("users"));
-        // if (getUser) {
-        //     getUser.map((user) => {
-        //         if (user.id == id) {
-        //             setFormData({ ...user })
-        //             setButtonChanged(true);
-        //         }
-        //     })
-        // }
-    }, [])
+        setUserData(result)
+    }, [result])
 
     //handel the user input
     const handelChange = (event) => {
@@ -101,11 +87,6 @@ const AddUser = () => {
 
     //handel the submitted data of the form
     const handelSubmit = (event) => {
-
-
-
-
-        console.log(formData)
         event.preventDefault();
 
         if (formData.username === '') {
@@ -121,17 +102,23 @@ const AddUser = () => {
             setError((prevError) => ({ ...prevError, address: "address required" }))
         }
         if (formData.username !== '' && formData.email !== '' && formData.age !== '' && formData.address !== '') {
-            dispatch(addUser(formData))
-            // navigate("/student-listing");
-
-            setFormData({
-                username: "",
-                email: "",
-                age: "",
-                address: "",
-                gender: "female",
-                languages: []
-            })
+            const findUser = userData.find((item) => item.email === formData.email);
+            if (findUser) {
+                setUserExists(true);
+            }
+            else {
+                setUserExists(false);
+                dispatch(addUser(formData))
+                navigate("/student-listing");
+                setFormData({
+                    username: "",
+                    email: "",
+                    age: "",
+                    address: "",
+                    gender: "female",
+                    languages: []
+                })
+            }
         }
     }
 
@@ -140,7 +127,7 @@ const AddUser = () => {
 
     }
 
-    //hnadel the logout functionality when user want to logout from button click
+    //handel the logout functionality when user want to logout from button click
     // const handelLogOut = () => {
     //     const getUser = JSON.parse(localStorage.getItem("loginUser"));
     //     getUser.map((user) => {
@@ -168,10 +155,17 @@ const AddUser = () => {
                                     <h1 className='text-primaryColor text-xl sm:text-2xl font-bold'>Update Student</h1>
                                 </div>
                                 :
-                                <div className='w-full flex justify-center items-center px-5 py-5'>
+                                <div className='flex flex-col w-full justify-center items-center px-5 py-5'>
                                     <h1 className='text-primaryColor text-xl sm:text-2xl font-bold'>Add New Student</h1>
+                                    {
+                                        userExists &&
+                                        <div className='mt-3 text-errorColor'>
+                                            <p className=''>User already exists please choose another email or login</p>
+                                        </div>
+                                    }
                                 </div>
                         }
+
                         <div className='flex flex-col items-center'>
                             <InputField
                                 name="username"
