@@ -1,12 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Shared/Navbar";
 
 
 const Layout = ({ children }) => {
-
-    const navigate = useNavigate();
-
 
     return (
         <div>

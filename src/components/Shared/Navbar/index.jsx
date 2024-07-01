@@ -48,7 +48,7 @@ const Navbar = () => {
 
                     <div className="flex justify-center items-center">
                         <button onClick={handelProfile}>
-                            <img src={images.profileImage} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
+                            <img src={images.profileImage} alt="" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
                         </button>
 
                         {

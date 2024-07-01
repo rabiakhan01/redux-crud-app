@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, InputField, OutlinedButton } from '../../components/Shared';
+import { Button, InputField } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -14,7 +14,6 @@ const AddUser = () => {
 
     //set the array of users 
     const [userData, setUserData] = useState(result)
-    // console.log("🚀 ~ AddUser ~ userData:", userData)
 
     //set the error when input fields are empty
     const [error, setError] = useState({
@@ -49,8 +48,8 @@ const AddUser = () => {
     useEffect(() => {
         if (id) {
             setButtonChanged(true);
-            const findUser = result.find((user) => user.id == +id);
-            console.log("🚀 ~ useEffect ~ findUser:", findUser)
+            const findUser = result.find((user) => user.id === +id);
+            // console.log("🚀 ~ useEffect ~ findUser:", findUser)
             if (findUser) {
                 setFormData(findUser);
             }

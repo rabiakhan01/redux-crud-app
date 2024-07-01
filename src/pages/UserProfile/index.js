@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Layout from '../../utils/Layout'
 import images from "../../assets/images/images";
 import { ProfileSection, Button } from "../../components/Shared";
-import { useNavigate } from "react-router-dom";
 const UserProfile = () => {
 
     const getUser = JSON.parse(localStorage.getItem("loginUser"));
@@ -36,7 +35,7 @@ const UserProfile = () => {
         let newData;
         setUserData(prevState => {
             newData = prevState.map(user => {
-                if (user.id == editUser.id) {
+                if (user.id === +editUser.id) {
                     return { ...editUser };
                 }
                 return user;

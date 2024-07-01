@@ -1,5 +1,4 @@
 import React from "react";
-import images from "../../../assets/images/images";
 import { useNavigate } from "react-router-dom";
 const ProfileModal = () => {
 

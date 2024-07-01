@@ -137,11 +137,11 @@ const Login = () => {
                                 passwordIcon
                                     ?
                                     <div className="absolute left-48 top-8 sm:left-64 sm:top-9">
-                                        <button type="button" className="" onClick={hidePassword}><img src={images.eye} alt="" className="h-4 sm:h-5 w-4 sm:w-5" /></button>
+                                        <button type="button" className="" onClick={hidePassword}><img src={images.eye} alt="dummy" className="h-4 sm:h-5 w-4 sm:w-5" /></button>
                                     </div>
                                     :
                                     <div className="absolute left-48 top-8 sm:left-64 sm:top-9">
-                                        <button type="button" className="" onClick={showPassword}><img src={images.eyeSlash} alt="" className="w-4 sm:w-5 h-5 sm:h-5" /></button>
+                                        <button type="button" className="" onClick={showPassword}><img src={images.eyeSlash} alt="dummy" className="w-4 sm:w-5 h-5 sm:h-5" /></button>
                                     </div>
                             }
 
