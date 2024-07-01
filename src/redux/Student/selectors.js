@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-export const GetUser = () => {
+export const GetStudent = () => {
     const res = useSelector((state) => state.userReducer);
     return res;
 }

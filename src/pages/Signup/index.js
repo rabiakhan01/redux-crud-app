@@ -5,18 +5,18 @@ import images from "../../assets/images/images";
 
 const SignUp = () => {
 
-    // get the user from local host
-    const getUser = () => {
-        const user = localStorage.getItem("loginUser");
-        if (user) {
-            return JSON.parse(user);
-        }
-        else {
-            return [];
-        }
-    }
+    // // get the user from local host
+    // const getUser = () => {
+    //     const user = localStorage.getItem("loginUser");
+    //     if (user) {
+    //         return JSON.parse(user);
+    //     }
+    //     else {
+    //         return [];
+    //     }
+    // }
     // state to set the users detail
-    const [signUpUser, setSignUpUser] = useState(getUser());
+    const [signUpUser, setSignUpUser] = useState();
     const [passwordIcon, setPasswordIcon] = useState(false);
     const [signUpData, setSignUpData] = useState({
         id: null,

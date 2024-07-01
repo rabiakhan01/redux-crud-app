@@ -28,6 +28,7 @@ const Login = () => {
     })
 
     const [passwordIcon, setPasswordIcon] = useState(false);
+
     // handel values of input fields of login form
     const handelChange = (event) => {
         const { name, value } = event.target;

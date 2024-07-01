@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, OutlinedButton, PrimaryButton } from "../../components/Shared";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../redux/User/actions";
+import { deleteStudent } from "../../redux/Student/actions";
 import images from '../../assets/images/images'
 import Layout from "../../utils/Layout";
-import { GetUser } from "../../redux/User/selectors";
+import { GetStudent } from "../../redux/Student/selectors";
 
 
 const Listing = () => {
     const dispatch = useDispatch();
-    const result = GetUser();
+    const result = GetStudent();
     const navigate = useNavigate();
     const loginUsers = JSON.parse(localStorage.getItem("loginUser"));
     const loggedInUser = loginUsers.find(user => user.isLogin)
@@ -23,7 +23,7 @@ const Listing = () => {
 
     // delete the user on delete button's click
     const removeUser = () => {
-        dispatch(deleteUser(deleteIndex))
+        dispatch(deleteStudent(deleteIndex))
         setUserData([...result]);
         setShowModal(false);
 

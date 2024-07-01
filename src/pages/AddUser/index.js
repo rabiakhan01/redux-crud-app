@@ -3,12 +3,12 @@ import { Button, InputField } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addUser, updateUser } from '../../redux/User/actions';
-import { GetUser } from '../../redux/User/selectors';
+import { addStudent, updateStudent } from '../../redux/Student/actions';
+import { GetStudent } from '../../redux/Student/selectors';
 
 const AddUser = () => {
     const dispatch = useDispatch();
-    const result = GetUser();
+    const result = GetStudent();
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -98,7 +98,7 @@ const AddUser = () => {
         navigate("/student-listing");
         const findUser = result.find((user) => user.id === +id);
         if (findUser) {
-            dispatch(updateUser({
+            dispatch(updateStudent({
                 id: findUser.id,
                 parentId: formData.parentId,
                 username: formData.username,
@@ -133,7 +133,7 @@ const AddUser = () => {
             }
             else {
                 setUserExists(false);
-                dispatch(addUser(formData))
+                dispatch(addStudent(formData))
                 navigate("/student-listing");
                 setFormData({
                     username: "",
