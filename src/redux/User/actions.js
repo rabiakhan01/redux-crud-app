@@ -1,4 +1,4 @@
-import { ADD_USER, LOGIN_USER, LOGOUT_USER } from "./types"
+import { ADD_USER, LOGIN_USER, LOGOUT_USER, UPDATE_USER } from "./types"
 
 export const addUser = (data) => {
     return {
@@ -18,5 +18,12 @@ export const loggedInUser = (email) => {
     return {
         type: LOGIN_USER,
         email,
+    }
+}
+
+export const updateUser = (data) => {
+    return {
+        type: UPDATE_USER,
+        data,
     }
 }

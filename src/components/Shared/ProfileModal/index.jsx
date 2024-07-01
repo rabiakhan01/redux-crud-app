@@ -2,7 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { GetUser } from "../../../redux/User/selectors";
 import { useDispatch } from "react-redux";
-import { logOutUser, updateUser } from "../../../redux/User/actions";
+import { logOutUser } from "../../../redux/User/actions";
+
 const ProfileModal = () => {
     const getUser = GetUser();
     // console.log(GetUser())
@@ -12,6 +13,7 @@ const ProfileModal = () => {
     const handelLogOut = () => {
         const findUser = getUser.find((user) => user.isLogin);
         dispatch(logOutUser(findUser.email))
+        navigate('/');
     }
 
     const handelProfile = () => {

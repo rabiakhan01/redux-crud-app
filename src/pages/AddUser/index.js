@@ -5,12 +5,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addStudent, updateStudent } from '../../redux/Student/actions';
 import { GetStudent } from '../../redux/Student/selectors';
+import { GetUser } from '../../redux/User/selectors';
 
 const AddUser = () => {
     const dispatch = useDispatch();
     const result = GetStudent();
     const { id } = useParams();
     const navigate = useNavigate();
+    const getUser = GetUser();
 
     //set the array of users 
     const [userData, setUserData] = useState(result)
@@ -76,8 +78,7 @@ const AddUser = () => {
             }
         }
         else {
-            const getUser = JSON.parse(localStorage.getItem("loginUser"));
-            const loggedInUser = getUser.find(user => user.isLogin === true)
+            const loggedInUser = getUser.find(user => user.isLogin)
             setFormData({
                 ...formData,
                 parentId: loggedInUser.id,

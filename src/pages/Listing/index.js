@@ -13,7 +13,7 @@ const Listing = () => {
     const dispatch = useDispatch();
     const result = GetStudent();
     const navigate = useNavigate();
-    const loginUsers = result;
+    const loginUsers = GetUser();
     const loggedInUser = loginUsers.find(user => user.isLogin)
 
     //set the array of stored in the redux's store
