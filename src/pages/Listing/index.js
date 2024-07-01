@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../../redux/User/actions";
 import images from '../../assets/images/images'
 import Layout from "../../utils/Layout";
+import { GetUser } from "../../redux/User/selectors";
 
 
 const Listing = () => {
     const dispatch = useDispatch();
-    const result = useSelector((state) => state.userReducer);
+    const result = GetUser();
     const navigate = useNavigate();
     const loginUsers = JSON.parse(localStorage.getItem("loginUser"));
     const loggedInUser = loginUsers.find(user => user.isLogin)

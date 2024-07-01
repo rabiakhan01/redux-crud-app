@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Button, InputField, OutlinedButton } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addUser, updateUser } from '../../redux/User/actions';
-
+import { GetUser } from '../../redux/User/selectors';
 
 const AddUser = () => {
     const dispatch = useDispatch();
-    const result = useSelector((state) => state.userReducer);
+    const result = GetUser();
     const { id } = useParams();
     const navigate = useNavigate();
 
     //set the array of users 
     const [userData, setUserData] = useState(result)
-    console.log("🚀 ~ AddUser ~ userData:", userData)
+    // console.log("🚀 ~ AddUser ~ userData:", userData)
 
     //set the error when input fields are empty
     const [error, setError] = useState({

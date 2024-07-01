@@ -10,9 +10,9 @@ const InputField = ({
     max,
     error
 }) => {
-    const [placeHolder, setPlaceHolder] = useState(false);
+    const [isShowPlaceHolder, setIsShowPlaceHolder] = useState(false);
     const handelFocus = () => {
-        setPlaceHolder(true)
+        setIsShowPlaceHolder(true)
     }
     return (
         <React.Fragment>
@@ -20,7 +20,7 @@ const InputField = ({
                 <input
                     name={name}
                     type={type}
-                    placeholder={placeHolder ? false : placeholder}
+                    placeholder={isShowPlaceHolder ? '' : placeholder}
                     value={value}
                     min={min}
                     max={max}
@@ -29,7 +29,7 @@ const InputField = ({
                     onFocus={handelFocus}
                 />
                 {
-                    placeHolder && <p className='absolute px-2 bg-white top-1 left-2.5 text-gray-500'>{placeholder}</p>
+                    isShowPlaceHolder && <p className='absolute px-2 bg-white top-1 left-2.5 text-gray-500'>{placeholder}</p>
                 }
             </div>
             {error && <span className='text-sm md:text-base text-errorColor w-full pt-1'>{error}</span>}
