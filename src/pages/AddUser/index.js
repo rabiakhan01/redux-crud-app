@@ -2,27 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Button, InputField, OutlinedButton } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Shared/Navbar';
+import { useDispatch } from 'react-redux';
+import { addUser, updateUser } from '../../redux/User/actions';
+import { GetUser } from '../../redux/User/selectors';
 
 const AddUser = () => {
-
+    const dispatch = useDispatch();
+    const result = GetUser();
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // get data from local storage for checking if user exists or not
-    const getUser = () => {
-        const user = localStorage.getItem("users");
-        if (user) {
-            return JSON.parse(user);
-        }
-        else {
-            return [];
-        }
-    }
-
-
     //set the array of users 
-    const [userData, setUserData] = useState(getUser())
+    const [userData, setUserData] = useState(result)
+    // console.log("🚀 ~ AddUser ~ userData:", userData)
 
     //set the error when input fields are empty
     const [error, setError] = useState({
@@ -43,23 +35,27 @@ const AddUser = () => {
         gender: 'male',
         languages: [],
     })
+    const [userExists, setUserExists] = useState(false);
 
     //button change from add user to update user
+
     const [buttonChanged, setButtonChanged] = useState(false);
 
-    //handel the edit user functionality
+    //update the userData when anything in the state changes
     useEffect(() => {
-        const getUser = JSON.parse(localStorage.getItem("users"));
-        if (getUser) {
-            getUser.map((user) => {
-                if (user.id == id) {
-                    setFormData({ ...user })
-                    setButtonChanged(true);
-                }
-            })
-        }
-    }, [])
+        setUserData(result)
+    }, [result])
 
+    useEffect(() => {
+        if (id) {
+            setButtonChanged(true);
+            const findUser = result.find((user) => user.id == +id);
+            console.log("🚀 ~ useEffect ~ findUser:", findUser)
+            if (findUser) {
+                setFormData(findUser);
+            }
+        }
+    }, [id])
     //handel the user input
     const handelChange = (event) => {
 
@@ -99,9 +95,24 @@ const AddUser = () => {
 
     }
 
+    const editUser = () => {
+        navigate("/student-listing");
+        const findUser = result.find((user) => user.id === +id);
+        if (findUser) {
+            dispatch(updateUser({
+                id: findUser.id,
+                parentId: formData.parentId,
+                username: formData.username,
+                email: formData.email,
+                age: formData.age,
+                address: formData.address,
+                gender: formData.gender,
+                languages: formData.languages,
+            }));
+        }
+    }
     //handel the submitted data of the form
     const handelSubmit = (event) => {
-
         event.preventDefault();
 
         if (formData.username === '') {
@@ -117,68 +128,27 @@ const AddUser = () => {
             setError((prevError) => ({ ...prevError, address: "address required" }))
         }
         if (formData.username !== '' && formData.email !== '' && formData.age !== '' && formData.address !== '') {
-
-            const updateData = [...userData, formData];
-            setUserData(updateData);
-            const setUser = JSON.stringify(updateData);
-            localStorage.setItem("users", setUser);
-            navigate("/student-listing");
-
-        }
-        setFormData({
-            username: "",
-            email: "",
-            age: "",
-            address: "",
-            gender: "female",
-            languages: []
-        })
-    }
-
-    //handel how to update data when user's information changes
-    const updateUser = () => {
-        let newData;
-        setUserData(prevState => {
-            newData = prevState.map(user => {
-                if (user.id == id) {
-                    return { ...formData };
-                }
-                return user;
-            });
-
-            const updateUser = JSON.stringify(newData);
-            localStorage.setItem("users", updateUser);
-            navigate("/student-listing")
-            return newData;
-
-        })
-        setButtonChanged(false);
-        setFormData({
-            username: "",
-            email: "",
-            age: "",
-            address: "",
-            gender: "female",
-            languages: []
-        });
-    }
-
-    //hnadel the logout functionality when user want to logout from button click
-    const handelLogOut = () => {
-        const getUser = JSON.parse(localStorage.getItem("loginUser"));
-        getUser.map((user) => {
-            if (user.isLogin) {
-                user.isLogin = false;
-                const updateUser = JSON.stringify(getUser);
-                localStorage.setItem("loginUser", updateUser);
-                navigate("/")
+            const findUser = userData.find((item) => item.email === formData.email);
+            if (findUser) {
+                setUserExists(true);
             }
-        })
+            else {
+                setUserExists(false);
+                dispatch(addUser(formData))
+                navigate("/student-listing");
+                setFormData({
+                    username: "",
+                    email: "",
+                    age: "",
+                    address: "",
+                    gender: "female",
+                    languages: []
+                })
+            }
+        }
     }
-    // listing button functionality
-    const UserListing = () => {
-        navigate("/student-listing")
-    }
+
+
 
     return (
         <Layout>
@@ -191,10 +161,17 @@ const AddUser = () => {
                                     <h1 className='text-primaryColor text-xl sm:text-2xl font-bold'>Update Student</h1>
                                 </div>
                                 :
-                                <div className='w-full flex justify-center items-center px-5 py-5'>
+                                <div className='flex flex-col w-full justify-center items-center px-5 py-5'>
                                     <h1 className='text-primaryColor text-xl sm:text-2xl font-bold'>Add New Student</h1>
+                                    {
+                                        userExists &&
+                                        <div className='mt-3 text-errorColor'>
+                                            <p className=''>User already exists please choose another email or login</p>
+                                        </div>
+                                    }
                                 </div>
                         }
+
                         <div className='flex flex-col items-center'>
                             <InputField
                                 name="username"
@@ -314,7 +291,7 @@ const AddUser = () => {
                                 buttonChanged ?
                                     <Button
                                         name="Update Student"
-                                        onClick={updateUser}
+                                        onClick={editUser}
                                         smWidth="28"
                                         mdWidth="sm:w-36"
                                     />

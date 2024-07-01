@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { InputField, Button, OutlinedButton } from "../../components/Shared";
-import Layout from "../../utils/Layout";
 import { useNavigate } from "react-router-dom";
+import images from "../../assets/images/images";
 
 const SignUp = () => {
 
@@ -17,6 +17,7 @@ const SignUp = () => {
     }
     // state to set the users detail
     const [signUpUser, setSignUpUser] = useState(getUser());
+    const [passwordIcon, setPasswordIcon] = useState(false);
     const [signUpData, setSignUpData] = useState({
         id: null,
         username: '',
@@ -101,6 +102,13 @@ const SignUp = () => {
     const handelAccount = () => {
         navigate("/");
     }
+
+    const showPassword = () => {
+        setPasswordIcon(true)
+    }
+    const hidePassword = () => {
+        setPasswordIcon(false)
+    }
     return (
 
         <div className="flex justify-center items-center h-lvh">
@@ -114,7 +122,7 @@ const SignUp = () => {
                         <InputField
                             name="username"
                             type="text"
-                            placeholder="Username"
+                            placeholder="username"
                             value={signUpData.username}
                             onChange={handelChange}
                             error={error.username}
@@ -128,14 +136,27 @@ const SignUp = () => {
                             onChange={handelChange}
                             error={error.email}
                         />
-                        <InputField
-                            name="password"
-                            type="password"
-                            placeholder="password"
-                            value={signUpData.password}
-                            onChange={handelChange}
-                            error={error.password}
-                        />
+                        <div className="relative flex flex-col">
+                            <InputField
+                                name="password"
+                                type={passwordIcon ? `text` : `password`}
+                                placeholder="password"
+                                value={signUpData.password}
+                                onChange={handelChange}
+                                error={error.password}
+                            />
+                            {
+                                passwordIcon
+                                    ?
+                                    <div className="absolute left-48 top-8 sm:left-64 sm:top-9">
+                                        <button type="button" className="" onClick={hidePassword}><img src={images.eye} alt="" className="h-4 sm:h-5 w-4 sm:w-5" /></button>
+                                    </div>
+                                    :
+                                    <div className="absolute left-48 top-8 sm:left-64 sm:top-9">
+                                        <button type="button" className="" onClick={showPassword}><img src={images.eyeSlash} alt="" className="w-4 sm:w-5 h-5 sm:h-5" /></button>
+                                    </div>
+                            }
+                        </div>
                     </form>
                 </div>
                 <div className="mt-10 mb-3">
