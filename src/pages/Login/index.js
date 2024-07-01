@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { Button, InputField, OutlinedButton } from "../../components/Shared";
 import images from '../../assets/images/images';
 import { useNavigate } from "react-router-dom";
-
+import { GetUser } from "../../redux/User/selectors";
+import { useDispatch } from "react-redux";
+import { loggedInUser, updateUser } from "../../redux/User/actions";
 
 const Login = () => {
 
     //hook used for navigation from one page to another
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    const getUser = GetUser();
+    console.log(GetUser())
     //handel state of input fields of login screen
     const [loginUser, setLoginUser] = useState({
         email: '',
@@ -47,55 +51,27 @@ const Login = () => {
     //handel login user
     const handelLogin = () => {
 
-        // get the data of users which are stored in local storage
-        const getUser = JSON.parse(localStorage.getItem("loginUser"));
-
-        //handel if atleast one user exists
-        if (getUser) {
-            //check if the user matches
-            getUser.map((user) => {
-
-                //if the users matches the cred then navigate to the Listing page
-                if (user.email === loginUser.email && user.password === loginUser.password) {
-                    user.isLogin = true;
-                    const setUser = JSON.stringify(getUser);
-                    localStorage.setItem("loginUser", setUser);
-                    navigate("/student-listing");
-                }
-
-                // activate validations  
-                else {
-                    if (loginUser.email !== "" && loginUser.password !== "") {
-                        setValidationError(true);
-                        setValidationMessage("Please enter a valid email and password");
-                    }
-                    else {
-                        if (loginUser.email === '') {
-                            setError((prevError) => ({ ...prevError, email: "email required" }))
-                        }
-                        if (loginUser.password === '') {
-                            setError((prevError) => ({ ...prevError, password: "password required" }))
-                        }
-                    }
-                }
-            })
+        if (loginUser.email === '') {
+            setError((prevError) => ({ ...prevError, email: "email required" }))
         }
-        //handel if no user exists 
-        else {
-            if (loginUser.email !== "" && loginUser.password !== "") {
-                setValidationError(true);
-                setValidationMessage("Account not exists please first create an account");
+        if (loginUser.password === '') {
+            setError((prevError) => ({ ...prevError, password: "password required" }))
+        }
+
+        if (loginUser.email !== '' && loginUser.password !== '') {
+
+            const findUser = getUser.find((user) => user.email === loginUser.email && user.password === loginUser.password);
+            if (findUser) {
+                dispatch(loggedInUser(findUser.email))
+                navigate("/student-listing");
             }
             else {
-                if (loginUser.email === '') {
-                    setError((prevError) => ({ ...prevError, email: "email required" }))
-                }
-                if (loginUser.password === '') {
-                    setError((prevError) => ({ ...prevError, password: "password required" }))
-                }
+                setValidationMessage("Please enter a valid email and password");
+                setValidationError(true);
             }
         }
     }
+
 
     // if user is not have account than navigate through this button to the signup page
     const createAccount = () => {

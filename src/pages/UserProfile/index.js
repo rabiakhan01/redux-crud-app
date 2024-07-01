@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import Layout from '../../utils/Layout'
 import images from "../../assets/images/images";
 import { ProfileSection, Button } from "../../components/Shared";
+import { GetUser } from "../../redux/User/selectors";
 const UserProfile = () => {
 
     const getUser = JSON.parse(localStorage.getItem("loginUser"));
-    const user = getUser.find(user => user.isLogin);
+    const user = GetUser().find(user => user.isLogin);
 
     const [disable, setDisable] = useState(false);
     const [editUser, seteditUser] = useState({

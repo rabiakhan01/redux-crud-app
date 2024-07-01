@@ -1,4 +1,4 @@
-import { ADD_USER, DELETE_USER, UPDATE_USER } from "./types"
+import { ADD_USER, LOGOUT_USER, LOGIN_USER } from "./types"
 
 export const userReducer = (state = [], action) => {
     console.log("data in actions", action.data)
@@ -8,6 +8,28 @@ export const userReducer = (state = [], action) => {
                 ...state,
                 action.data
             ]
+        case LOGIN_USER:
+            const updatedUsers = state.map((user) => {
+                if (user.email === action.email) {
+                    return {
+                        ...user, isLogin: true
+                    }
+                }
+                else { return user }
+            })
+            return updatedUsers;
+
+        case LOGOUT_USER:
+            const editUsers = state.map((user) => {
+                if (user.email === action.email) {
+                    return { ...user, isLogin: false }
+                }
+                else {
+                    return user
+                }
+            });
+            return editUsers;
+
         default:
             return state;
     }
