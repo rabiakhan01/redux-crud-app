@@ -128,7 +128,7 @@ const AddUser = () => {
             setError((prevError) => ({ ...prevError, address: "address required" }))
         }
         if (formData.username !== '' && formData.email !== '' && formData.age !== '' && formData.address !== '') {
-            const findUser = userData.find((item) => item.email === formData.email);
+            const findUser = userData.find((item) => item.email === formData.email && item.parentId === formData.parentId);
             if (findUser) {
                 setUserExists(true);
             }
