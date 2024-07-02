@@ -1,6 +1,8 @@
+const { GetUser } = require("../redux/User/selectors");
+
 const isLoginUser = () => {
 
-    const getUser = JSON.parse(localStorage.getItem("loginUser"));
+    const getUser = GetUser();
     if (getUser) {
         const user = getUser.find(user => user.isLogin === true);
         if (user) {
@@ -16,17 +18,4 @@ const isLoginUser = () => {
 
 }
 
-const getUser = () => {
-    const user = localStorage.getItem("users");
-    if (user) {
-        return JSON.parse(user);
-    }
-    else {
-        return [];
-    }
-}
-
-
-
 exports.isLoginUser = isLoginUser;
-exports.getUser = getUser;

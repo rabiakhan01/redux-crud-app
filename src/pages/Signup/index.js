@@ -2,23 +2,14 @@ import React, { useState } from "react";
 import { InputField, Button, OutlinedButton } from "../../components/Shared";
 import { useNavigate } from "react-router-dom";
 import images from "../../assets/images/images";
-
+import { useDispatch } from "react-redux";
+import { addUser } from "../../redux/User/actions";
+import { GetUser } from "../../redux/User/selectors";
 const SignUp = () => {
-
-    // get the user from local host
-    const getUser = () => {
-        const user = localStorage.getItem("loginUser");
-        if (user) {
-            return JSON.parse(user);
-        }
-        else {
-            return [];
-        }
-    }
-    // state to set the users detail
-    const [signUpUser, setSignUpUser] = useState(getUser());
+    const dispatch = useDispatch();
+    const result = GetUser();
     const [passwordIcon, setPasswordIcon] = useState(false);
-    const [signUpData, setSignUpData] = useState({
+    const [signUpUser, setSignUpUser] = useState({
         id: null,
         username: '',
         email: '',
@@ -41,9 +32,9 @@ const SignUp = () => {
     const handelChange = (event) => {
         const { name, value } = event.target;
 
-        setSignUpData(
+        setSignUpUser(
             {
-                ...signUpData,
+                ...signUpUser,
                 id: Math.floor(Math.random() * 100),
                 [name]: value
             });
@@ -60,39 +51,29 @@ const SignUp = () => {
 
         event.preventDefault();
 
-        if (signUpData.username === '') {
+        if (signUpUser.username === '') {
             setError((prevError) => ({ ...prevError, username: "username required" }))
         }
-        if (signUpData.email === '') {
+        if (signUpUser.email === '') {
             setError((prevError) => ({ ...prevError, email: "email required" }))
         }
-        if (signUpData.password === '') {
+        if (signUpUser.password === '') {
             setError((prevError) => ({ ...prevError, password: "password required" }))
         }
 
         // check if the fields are not empty then submit it and update the user array
 
-        if (signUpData.username !== '' && signUpData.email !== '' && signUpData.password !== '') {
+        if (signUpUser.username !== '' && signUpUser.email !== '' && signUpUser.password !== '') {
 
-            const newArray = signUpUser.find(user => user.email === signUpData.email);
-            if (signUpUser.length > 0) {
-                if (newArray) {
-                    setExistUser(true);
-                    setErrorMessage("user exists choose another email");
-                }
-                else {
-                    const updateData = [...signUpUser, signUpData];
-                    setSignUpUser(updateData);
-                    const setUser = JSON.stringify(updateData);
-                    localStorage.setItem("loginUser", setUser);
-                    navigate("/");
-                }
+            //dispatch(addUser(signUpUser));
+
+            const isUserExists = result.find(user => user.email === signUpUser.email);
+            if (isUserExists) {
+                setExistUser(true);
+                setErrorMessage("user exists choose another email");
             }
             else {
-                const updateData = [...signUpUser, signUpData];
-                setSignUpUser(updateData);
-                const setUser = JSON.stringify(updateData);
-                localStorage.setItem("loginUser", setUser);
+                dispatch(addUser(signUpUser));
                 navigate("/");
             }
         }
@@ -123,7 +104,7 @@ const SignUp = () => {
                             name="username"
                             type="text"
                             placeholder="username"
-                            value={signUpData.username}
+                            value={signUpUser.username}
                             onChange={handelChange}
                             error={error.username}
 
@@ -132,7 +113,7 @@ const SignUp = () => {
                             name="email"
                             type="email"
                             placeholder="email"
-                            value={signUpData.email}
+                            value={signUpUser.email}
                             onChange={handelChange}
                             error={error.email}
                         />
@@ -141,7 +122,7 @@ const SignUp = () => {
                                 name="password"
                                 type={passwordIcon ? `text` : `password`}
                                 placeholder="password"
-                                value={signUpData.password}
+                                value={signUpUser.password}
                                 onChange={handelChange}
                                 error={error.password}
                             />

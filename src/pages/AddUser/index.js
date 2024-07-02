@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Button, InputField, OutlinedButton } from '../../components/Shared';
+import { Button, InputField } from '../../components/Shared';
 import Layout from '../../utils/Layout';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addUser, updateUser } from '../../redux/User/actions';
+import { addStudent, updateStudent } from '../../redux/Student/actions';
+import { GetStudent } from '../../redux/Student/selectors';
 import { GetUser } from '../../redux/User/selectors';
 
 const AddUser = () => {
     const dispatch = useDispatch();
-    const result = GetUser();
+    const result = GetStudent();
     const { id } = useParams();
     const navigate = useNavigate();
+    const getUser = GetUser();
 
     //set the array of users 
     const [userData, setUserData] = useState(result)
-    // console.log("🚀 ~ AddUser ~ userData:", userData)
 
     //set the error when input fields are empty
     const [error, setError] = useState({
@@ -49,8 +50,8 @@ const AddUser = () => {
     useEffect(() => {
         if (id) {
             setButtonChanged(true);
-            const findUser = result.find((user) => user.id == +id);
-            console.log("🚀 ~ useEffect ~ findUser:", findUser)
+            const findUser = result.find((user) => user.id === +id);
+            // console.log("🚀 ~ useEffect ~ findUser:", findUser)
             if (findUser) {
                 setFormData(findUser);
             }
@@ -77,8 +78,7 @@ const AddUser = () => {
             }
         }
         else {
-            const getUser = JSON.parse(localStorage.getItem("loginUser"));
-            const loggedInUser = getUser.find(user => user.isLogin === true)
+            const loggedInUser = getUser.find(user => user.isLogin)
             setFormData({
                 ...formData,
                 parentId: loggedInUser.id,
@@ -99,7 +99,7 @@ const AddUser = () => {
         navigate("/student-listing");
         const findUser = result.find((user) => user.id === +id);
         if (findUser) {
-            dispatch(updateUser({
+            dispatch(updateStudent({
                 id: findUser.id,
                 parentId: formData.parentId,
                 username: formData.username,
@@ -134,7 +134,7 @@ const AddUser = () => {
             }
             else {
                 setUserExists(false);
-                dispatch(addUser(formData))
+                dispatch(addStudent(formData))
                 navigate("/student-listing");
                 setFormData({
                     username: "",

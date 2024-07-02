@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 export const GetUser = () => {
-    const res = useSelector((state) => state.userReducer);
-    return res;
+    const result = useSelector((state) => state.userReducer);
+    //console.log("🚀 ~ GetUser ~ result:", result)
+    return result;
 }
-

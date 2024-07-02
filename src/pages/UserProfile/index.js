@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Layout from '../../utils/Layout'
 import images from "../../assets/images/images";
 import { ProfileSection, Button } from "../../components/Shared";
-import { useNavigate } from "react-router-dom";
+import { GetUser } from "../../redux/User/selectors";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../redux/User/actions";
 const UserProfile = () => {
 
-    const getUser = JSON.parse(localStorage.getItem("loginUser"));
-    const user = getUser.find(user => user.isLogin);
+    const user = GetUser().find(user => user.isLogin);
+    const dispatch = useDispatch();
 
     const [disable, setDisable] = useState(false);
     const [editUser, seteditUser] = useState({
@@ -16,8 +18,6 @@ const UserProfile = () => {
         password: user.password,
         isLogin: user.isLogin,
     });
-
-    const [userData, setUserData] = useState(getUser);
 
     const handelChange = (event) => {
 
@@ -32,22 +32,7 @@ const UserProfile = () => {
 
     }
     const handelSubmit = () => {
-
-        let newData;
-        setUserData(prevState => {
-            newData = prevState.map(user => {
-                if (user.id == editUser.id) {
-                    return { ...editUser };
-                }
-                return user;
-            });
-
-            const updateUser = JSON.stringify(newData);
-            localStorage.setItem("loginUser", updateUser);
-            seteditUser(editUser);
-            return newData;
-
-        })
+        dispatch(updateUser(editUser))
         setDisable(false);
     }
 

@@ -1,25 +1,48 @@
-import { ADD_USER, DELETE_USER, UPDATE_USER } from "./types";
+import { ADD_USER, LOGOUT_USER, LOGIN_USER, UPDATE_USER } from "./types"
 
 export const userReducer = (state = [], action) => {
-
+    console.log("data in actions", action.data)
     switch (action.type) {
+
         case ADD_USER:
             return [
                 ...state,
                 action.data
             ]
-        case DELETE_USER:
-            const newData = state.filter((user) => user.id !== action.id);
-            return newData;
+
         case UPDATE_USER:
-            const updatedData = state.map((user) => {
-                if (user.id === action.data.id) {
+            const updateUserData = state.map((user) => {
+                if (user.email === action.data.email) {
                     return action.data
                 }
-                else return user
+                else {
+                    return user
+                }
+            })
+            return updateUserData;
+
+        case LOGIN_USER:
+            const updatedUsers = state.map((user) => {
+                if (user.email === action.email) {
+                    return {
+                        ...user, isLogin: true
+                    }
+                }
+                else { return user }
+            })
+            return updatedUsers;
+
+        case LOGOUT_USER:
+            const editUsers = state.map((user) => {
+                if (user.email === action.email) {
+                    return { ...user, isLogin: false }
+                }
+                else {
+                    return user
+                }
             });
-            console.log("🚀 ~ updatedData ~ updatedData:", updatedData)
-            return updatedData;
+            return editUsers;
+
         default:
             return state;
     }

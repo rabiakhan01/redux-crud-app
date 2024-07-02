@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, OutlinedButton, PrimaryButton } from "../../components/Shared";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteUser } from "../../redux/User/actions";
+import { useDispatch } from "react-redux";
+import { deleteStudent } from "../../redux/Student/actions";
 import images from '../../assets/images/images'
 import Layout from "../../utils/Layout";
+import { GetStudent } from "../../redux/Student/selectors";
 import { GetUser } from "../../redux/User/selectors";
 
 
 const Listing = () => {
     const dispatch = useDispatch();
-    const result = GetUser();
+    const result = GetStudent();
     const navigate = useNavigate();
-    const loginUsers = JSON.parse(localStorage.getItem("loginUser"));
+    const loginUsers = GetUser();
     const loggedInUser = loginUsers.find(user => user.isLogin)
 
     //set the array of stored in the redux's store
@@ -23,7 +24,7 @@ const Listing = () => {
 
     // delete the user on delete button's click
     const removeUser = () => {
-        dispatch(deleteUser(deleteIndex))
+        dispatch(deleteStudent(deleteIndex))
         setUserData([...result]);
         setShowModal(false);
 
@@ -49,7 +50,7 @@ const Listing = () => {
         setRows(() => {
             if (userData?.length > 0) {
                 return userData?.filter((user) => {
-                    if (user.parentId == loggedInUser.id) {
+                    if (user.parentId === +loggedInUser.id) {
                         return user
                     }
                 })
@@ -126,7 +127,7 @@ const Listing = () => {
                     <Modal>
                         <div className="flex justify-between pr-5 pt-5">
                             <p className="text-lg pl-3 text-errorColor font-medium">Delete The Record</p>
-                            <button onClick={removeModal}><img src={images.cross} className="h-4 w-4" /></button>
+                            <button onClick={removeModal}><img src={images.cross} alt="" className="h-4 w-4" /></button>
                         </div>
                         <div className="text-lg font-medium text-primaryColor text-center">
                             <h1>Are you sure you want to delete this record?</h1>

@@ -1,22 +1,19 @@
 import React from "react";
-import images from "../../../assets/images/images";
 import { useNavigate } from "react-router-dom";
+import { GetUser } from "../../../redux/User/selectors";
+import { useDispatch } from "react-redux";
+import { logOutUser } from "../../../redux/User/actions";
+
 const ProfileModal = () => {
-
+    const getUser = GetUser();
+    // console.log(GetUser())
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     //handel logout functionality on button clicked 
     const handelLogOut = () => {
-
-        const getUser = JSON.parse(localStorage.getItem("loginUser"));
-        getUser.map((user) => {
-            if (user.isLogin) {
-                user.isLogin = false;
-                const updateUser = JSON.stringify(getUser);
-                localStorage.setItem("loginUser", updateUser);
-                navigate("/")
-            }
-        })
+        const findUser = getUser.find((user) => user.isLogin);
+        dispatch(logOutUser(findUser.email))
+        navigate('/');
     }
 
     const handelProfile = () => {

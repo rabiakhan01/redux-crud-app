@@ -1,16 +1,23 @@
-import { ADD_USER, DELETE_USER, UPDATE_USER } from "./types"
+import { ADD_USER, LOGIN_USER, LOGOUT_USER, UPDATE_USER } from "./types"
 
 export const addUser = (data) => {
     return {
         type: ADD_USER,
         data,
     }
-}
 
-export const deleteUser = (id) => {
+}
+export const logOutUser = (email) => {
     return {
-        type: DELETE_USER,
-        id,
+        type: LOGOUT_USER,
+        email
+    }
+
+}
+export const loggedInUser = (email) => {
+    return {
+        type: LOGIN_USER,
+        email,
     }
 }
 
