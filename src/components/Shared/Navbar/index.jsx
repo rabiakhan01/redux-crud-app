@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import images from "../../../assets/images/images";
 import ProfileModal from "../ProfileModal";
+import { useDispatch } from "react-redux";
+import { GetUser } from "../../../redux/User/selectors";
+import { logOutUser } from "../../../redux/User/actions";
 
 const Navbar = () => {
-
+    const dispatch = useDispatch();
+    const getUser = GetUser();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [mobileMenu, setMobilMeu] = useState(false);
@@ -20,24 +24,19 @@ const Navbar = () => {
     //handel logout functionality on button clicked 
     const handelLogOut = () => {
 
-        const getUser = JSON.parse(localStorage.getItem("loginUser"));
-        getUser.map((user) => {
-            if (user.isLogin) {
-                user.isLogin = false;
-                const updateUser = JSON.stringify(getUser);
-                localStorage.setItem("loginUser", updateUser);
-                navigate("/")
-            }
-        })
+        const findUser = getUser.find((user) => user.isLogin);
+        dispatch(logOutUser(findUser.email))
+        navigate('/');
     }
 
     return (
 
         <React.Fragment>
-            <nav className="flex flex-row-reverse justify-between md:flex-row w-full mb-10 bg-primaryColor py-[18px]">
+            <nav className="flex flex-row-reverse justify-between items-center md:flex-row w-full mb-10 bg-primaryColor">
                 <div className="hidden md:flex relative text-xl text-outlineColor justify-center items-center">
                     <div className="flex justify-center items-center">
-                        <h1 className="absolute left-10">StudentSphere</h1>
+                        <img src={images.logo} alt="" className="h-20 w-20" />
+                        <h1 className="absolute left-14 top-6">StudentSphere</h1>
                     </div>
                 </div>
                 <div className="hidden md:flex gap-5 relative w-full justify-start md:justify-end md:items-center md:mr-[3.53rem]">
@@ -79,8 +78,9 @@ const Navbar = () => {
                         </div>
                     }
                 </div>
-                <div className="flex md:hidden pl-6 text-md text-outlineColor justify-center items-center">
-                    <h1>StudentSphere</h1>
+                <div className="relative flex md:hidden text-md text-outlineColor justify-center items-center">
+                    <img src={images.logo} alt="" className="h-16 w-16" />
+                    <h1 className="absolute left-12">StudentSphere</h1>
                 </div>
 
             </nav>
